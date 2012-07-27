@@ -2,6 +2,7 @@
   :description "FIXME: write description"
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [zookeeper-clj "0.9.1"]
+                 [clj-json "0.5.1"]
                  [cheshire "4.0.1"]
                  [metrics-clojure "0.8.0" :exclusions [cheshire]]
                  [metrics-clojure-ring "0.8.0" :exclusions [cheshire]]
