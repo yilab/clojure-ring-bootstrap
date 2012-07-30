@@ -1,6 +1,7 @@
 (ns clojure-ring-bootstrap.jetty-zookeeper-registry
   (:require [zookeeper :as zk]
-            [clj-json.core :as json])
+            [clj-json.core :as json]
+            [clojure.tools [logging :as log]])
   (:import java.net.InetAddress
            (org.eclipse.jetty.server Server)
            (org.eclipse.jetty.util.component AbstractLifeCycle$AbstractLifeCycleListener)))
@@ -18,7 +19,8 @@
 
 (defn- node-content [hostname ports extras]
   (json/generate-string (merge {"hostname" hostname,
-                                "ports" ports} extras)))
+                                "ports" ports
+                                "port" (first ports)} extras)))
 
 (defn- get-server-ports [^Server server]
   (map #(.getPort %1) (.getConnectors server)))
@@ -30,7 +32,10 @@
           (remove-trailing [s] (if (.endsWith s "/")
                                  (apply str (butlast s))
                                  s))]
-    (-> p add-leading remove-trailing)))
+    (if (not (or (empty? p)
+                 (= "/" p)))
+      (-> p add-leading remove-trailing)
+      "")))
 
 (defn- install-lifecycle-monitor! [^Server server config]
   (let [zkc      (config->zk-connection config)
@@ -52,13 +57,15 @@
                                                             :data       (.getBytes (json/generate-string content)))]
                                    (swap! registered-path (constantly node-name)))
                                  (catch Exception e
-                                   (println "Derped out\n")
-                                   (.printStackTrace e)
-                                   ;; TODO: Figure out a solution here.
-                                   )))
+                                   (log/error "Could not register our presence with zookeeper." e))))
+
                              (lifeCycleStopping [event]
                                (when-let [path @registered-path]
-                                 (zk/delete registered-path)))))))
+                                 (try
+                                   (zk/delete zkc path)
+                                   (catch Exception e
+                                     (log/error "Could not delete presence in zookeeper." e))
+                                   (finally (zk/close zkc)))))))))
 
 (defn zk-service-configurator [& {:as config}]
   (fn [server]
