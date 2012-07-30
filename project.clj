@@ -6,6 +6,7 @@
                  [cheshire "4.0.1"]
                  [metrics-clojure "0.8.0" :exclusions [cheshire]]
                  [metrics-clojure-ring "0.8.0" :exclusions [cheshire]]
+                 [org.clojure/tools.logging "0.2.3"]
                  [log4j/log4j "1.2.16" :exclusions [javax.mail/mail
                                                     javax.jms/jms
                                                     com.sun.jdmk/jmxtools
@@ -14,4 +15,4 @@
                  [ring/ring-core "1.1.1"]
                  [hiccup "1.0.0"]]
   :plugins [[lein-swank "1.4.4"]]
-  :dev-devependencies [])
+  :dev-dependencies [[ring/ring-jetty-adapter "0.3.11"]])

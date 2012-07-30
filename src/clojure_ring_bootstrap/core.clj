@@ -1,17 +1,9 @@
 (ns clojure-ring-bootstrap.core
-  (:use [clojure-ring-bootstrap [healthcheck :only (healthcheck-middleware)]]
+  (:use clojure-ring-bootstrap.util
+        [clojure-ring-bootstrap [healthcheck :only (healthcheck-middleware)]
+                                [jetty-zookeeper-registry :only (install-lifecycle-monitor!)]]
         [metrics.ring [expose :only (expose-metrics-as-json)]
-                      [instrument :only (instrument)]]))
-
-
-(defn- sanitize-path [p]
-  (letfn [(prefix [p] (if (.startsWith p "/")
-                        p
-                        (str "/" p)))
-          (suffix [p] (if (.endsWith p "/")
-                        (apply str (butlast p))
-                        p))]
-    (-> p prefix suffix)))
+         [instrument :only (instrument)]]))
 
 
 (defn bootstrap-middleware [handler & {:keys [healthchecks healthcheck-endpoint metrics-endpoint] :or
@@ -23,3 +15,8 @@
         instrument
         (expose-metrics-as-json mpoint)
         (healthcheck-middleware healthchecks hpoint))))
+
+(defn zk-service-configurator [& {:keys [path hostname contents zk-connect] :as config}]
+  (fn [server]
+    (install-lifecycle-monitor! server config)
+    server))
