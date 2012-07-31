@@ -12,7 +12,7 @@
     (catch Exception e
       [::failure e])))
 
-(defn- all-succeded? [healthcheck-results]
+(defn- all-succeeded? [healthcheck-results]
   (empty? (filter #(not (= ::success (first (second %)))) healthcheck-results)))
 
 (defn- run-healthchecks [healthcheck-map]
@@ -32,7 +32,7 @@
 
 (defn- healthcheck-action [named-healthchecks]
   (let [results    (run-healthchecks named-healthchecks)
-        succeeded? (all-succeded? results)]
+        succeeded? (all-succeeded? results)]
     (-> (response (html-healthcheck-results results))
         (content-type "text/html")
         (status (if succeeded? 200 500)))))
