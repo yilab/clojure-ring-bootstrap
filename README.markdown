@@ -49,6 +49,7 @@ functions and reports their output. If any of the healthchecks return false or t
 exception, they "fail" and the page will report a status code `500`. The contents of the page also reflect
 the output, making the healthchecks suitable for human inspection. If all tests pass, it reports a `200`.
 
+
     > curl -v http://localhost:8080/healthcheck/
     * About to connect() to localhost port 8080 (#0)
     *   Trying ::1... connected
@@ -77,6 +78,8 @@ the output, making the healthchecks suitable for human inspection. If all tests 
 ### Metrics Output
 
 For `/metrics/` you should expect output like:
+
+
     > curl http://localhost/metrics/
     {"ring.responses.rate.4xx":{"type":"meter","rates":{"1":0.015991117074135343,"
     5":0.0033057092356765017,"15":0.0011080303990206543}},"ring.responses.rate.5xx":
