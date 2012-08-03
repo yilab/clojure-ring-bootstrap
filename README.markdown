@@ -121,6 +121,7 @@ connection losses to zookeeper at the time of the 0.1.0 release. This shortcomin
 
 We're working to improve this library. On our roadmap are the following features:
 
+0. Testing is immanent. (Sometimes you just gotta write a README, you know?)
 1. Allow failing healthchecks to remove or re-add the system from zookeeper.
 2. Allow for dynamic contents in zookeeper hashes with variable periodicity.
 3. Better behavior when the zookeeper server cannot be found.
