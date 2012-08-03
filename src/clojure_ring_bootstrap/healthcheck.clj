@@ -27,8 +27,9 @@
 
 (defn- html-healthcheck-results [healthcheck-results]
   (html5 [:header [:title "Healthchecks"]]
-         [:section [:p "The following healthchecks have been registered:"]
-          [:dl (map result->html healthcheck-results)]]))
+         [:body
+          [:section [:p "The following healthchecks have been registered:"]
+           [:dl (map result->html healthcheck-results)]]]))
 
 (defn- healthcheck-action [named-healthchecks]
   (let [results    (run-healthchecks named-healthchecks)
