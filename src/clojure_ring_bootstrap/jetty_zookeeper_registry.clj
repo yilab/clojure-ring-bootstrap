@@ -20,7 +20,7 @@
 
 (defn- node-content [hostname ports extras]
   (let [extra-pairs (if (fn? extras) (extras) extras)]
-    (json/generate-string (merge {"hostname" hostname,
+    (json/generate-string (merge {"host" hostname,
                                   "ports" ports
                                   "port" (first ports)} extra-pairs))))
 
