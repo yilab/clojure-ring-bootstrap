@@ -12,7 +12,7 @@
                                                     com.sun.jdmk/jmxtools
                                                     com.sun.jmx/jmxri]]
                  [org.slf4j/slf4j-log4j12 "1.6.4"]
-                 [ring/ring-core "1.1.1"]
+                 [ring/ring-core "1.1.5"]
                  [hiccup "1.0.0"]]
   :plugins [[lein-swank "1.4.4"]]
   :dev-dependencies [[ring/ring-jetty-adapter "0.3.11"]])

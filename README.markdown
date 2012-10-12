@@ -1,6 +1,6 @@
 # ring-bootstrap
 
-Ring bootstrap is an internal simgle core inclusion at Crowdflower to bring ring-based
+Ring bootstrap is an internal simple core inclusion at Crowdflower to bring ring-based
 service in line with the functionality provided by other API toolkits
 like Yammer's DropWizard. It does this by exposing functions to make
 the following trivial:
@@ -91,7 +91,7 @@ For a full treatment on this output, please refer to the
 
 ### Zookeeper Registration (Jetty only)
 
-At Crowdflower, we try to follow a Boundary-inspiried policy of registering internal service providers into
+At Crowdflower, we try to follow a Boundary-inspired policy of registering internal service providers into
 zookeeper, and using that data to connect rather than providing a proxy for every internal service. This
 allows us to do rolling restarts and allows clients to make intelligent decisions about which service
 to connect to.

@@ -1,7 +1,7 @@
 (ns clojure-ring-bootstrap.core
   (:use clojure-ring-bootstrap.util
         [clojure-ring-bootstrap [healthcheck :only (healthcheck-middleware)]
-                                [jetty-zookeeper-registry :only (install-lifecycle-monitor!)]]
+         [jetty-zookeeper-registry :only (install-lifecycle-monitor!)]]
         [metrics.ring [expose :only (expose-metrics-as-json)]
          [instrument :only (instrument)]]))
 
