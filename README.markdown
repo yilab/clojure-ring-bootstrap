@@ -1,9 +1,6 @@
-# ring-bootstrap
+# clojure-ring-bootstrap
 
-Ring bootstrap is an internal simple core inclusion at Crowdflower to bring ring-based
-service in line with the functionality provided by other API toolkits
-like Yammer's DropWizard. It does this by exposing functions to make
-the following trivial:
+Clojure-Ring-Bootstrap exposes functions to:
 
 1. Add metrics to your API handlers, via clj-metrics and the ring middleware.
 2. Add a page for health checks to your handler, so that external clients can
@@ -14,22 +11,22 @@ the following trivial:
 
 ## Usage
 
-First, include the library as a dependency. In your `project.clj` file
-add the dependency:
+In your `project.clj` file add the dependency:
 
-        ["com.crowdflower/clojure-ring-bootstrap" "0.1.0"]
+        ["clojure-ring-bootstrap" "0.2.0"]
 
 Then when you register a handler you can add `/metrics/` and
 `/healthcheck/` responders with the middleware function
 `bootstrap-middleware` found in `clojure-ring-bootstrap.core`.
-Please note that these are folded into your actual ring handler, so
-they are probably not appropriate for exposing to external clients.
+*Note that these are folded into your actual ring handler, so
+they are probably not appropriate for exposing to external clients.*
 
 ### Adding Healthchecks and Metrics
 
-`bootstrap-middleware` takes three key arguments, but the most
+`bootstrap-middleware` takes three key arguments. The most
 important is `:healthchecks`, which takes a map containing healthcheck
-names and healthcheck functions.
+names and healthcheck functions. These can return whatever arbitrary
+app-specific status information you'd like to expose to instrumentation.
 
 E.g.,
 
@@ -40,11 +37,11 @@ E.g.,
                                                     :check-perms    (fn [] ...)})))
 
 
-Your endpoint will then respond to '/metrics/' and '/healthchecks/'.
+Your endpoint will then respond to `/metrics/` and `/healthchecks/`.
 
 ### Healthcheck Output
 
-Every time that the `/healthcheck/` endpoint is hit, it calls each of your named healthcheck
+Every time that the `/healthchecks/` endpoint is hit, it calls each of your named healthcheck
 functions and reports their output. If any of the healthchecks return false or throw an uncaught
 exception, they "fail" and the page will report a status code `500`. The contents of the page also reflect
 the output, making the healthchecks suitable for human inspection. If all tests pass, it reports a `200`.
@@ -92,11 +89,11 @@ For a full treatment on this output, please refer to the
 ### Zookeeper Registration (Jetty only)
 
 At Crowdflower, we try to follow a Boundary-inspired policy of registering internal service providers into
-zookeeper, and using that data to connect rather than providing a proxy for every internal service. This
-allows us to do rolling restarts and allows clients to make intelligent decisions about which service
+Zookeeper and using that data to connect, rather than providing a proxy for every internal service. This
+allows us to do rolling restarts, and allows clients to make intelligent decisions about which service
 to connect to.
 
-Our Zookeeper registration code is not ring middleware but rather a Jetty configuratior. It registers
+Our Zookeeper registration code is not Ring middleware, but rather a Jetty configuratior. It registers
 a lifecycle observer so that the zookeeper registration is removed *before* graceful shutdown is complete.
 
 You can register a jetty service at server creation time like so:
@@ -109,26 +106,29 @@ You can register a jetty service at server creation time like so:
 
 This will register a sequential, ephemeral node in zookeeper `/path/in/zookeeper/provider-000001`.
 The data attribute of the node will be a json representation of your contents hash merged with
-the  default keys, "hostname", "ports", and "port". Port is the preferred binding, but in some cases multiple
-ports may be exposed and "ports" captures that. These details should be sufficient to allow a client to
+the  default keys, `hostname`, `ports`, and `port`. `port` is the preferred binding, but in some cases multiple
+ports may be exposed, and `ports` captures that. These details should be sufficient to allow a client to
 connect.
 
-In some cases the default behavior of the configurator to determine your machine's hostname. In this
-case, a static string or fn may be passed to `zk-service-configurator` under the key `:hostname` to
-override the default behavior.
+The configurator tries to determine your machine's hostname
+automatically. If this does not work to your liking, a static string
+or fn may be passed to `zk-service-configurator` under the key
+`:hostname` to override the default behavior.
 
-Please be advised that this feature is not quite 100% robust, in that we do not properly handle
-connection losses to zookeeper at the time of the 0.1.0 release. This shortcoming should be corrected.
+Please be advised that this feature is not quite 100% robust; we do not properly handle
+connection losses to zookeeper at the time of the 0.2.0 release. This shortcoming should be corrected.
 
-## Planned Features
+## Roadmap of Planned Features
 
 We're working to improve this library. On our roadmap are the following features:
 
-0. Testing is immanent. (Sometimes you just gotta write a README, you know?)
+0. Testing
 1. Allow failing healthchecks to remove or re-add the system from zookeeper.
 2. Allow for dynamic contents in zookeeper hashes with variable periodicity.
 3. Better behavior when the zookeeper server cannot be found.
 4. A simple service discovery shim to pair with this.
+
+Pull requests are welcome. :)
 
 
 ## License
