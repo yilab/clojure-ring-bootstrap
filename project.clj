@@ -1,4 +1,4 @@
-(defproject clojure-ring-bootstrap "0.2.0"
+(defproject clojure-ring-bootstrap "0.2.1-SNAPSHOT"
   :description "Add metrics, healthchecks, and Zookeeper service registration."
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [zookeeper-clj "0.9.2" :exclusions [org.clojure/clojure]]
